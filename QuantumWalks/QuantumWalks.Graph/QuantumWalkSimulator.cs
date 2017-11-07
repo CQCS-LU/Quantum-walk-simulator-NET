@@ -21,14 +21,14 @@ namespace CQCS.QuantumWalks.Graph
         public QuantumWalkSimulator(Graph g)
         {
             this.g = g;
-            this.N = g.Verteces.Count;
+            this.N = g.Vertices.Count;
             
             // Set initial amplitudes
             int stateCount = 2*g.Edges.Count;
 			
             double initialAmplitude = 1 / Math.Sqrt (stateCount);
 
-            foreach (Vertex v in g.Verteces)
+            foreach (Vertex v in g.Vertices)
                 foreach (Edge e in v.Edges)
 			    {
                     e.SetAmplitude (v, initialAmplitude);
@@ -42,7 +42,7 @@ namespace CQCS.QuantumWalks.Graph
 
 		public void MarkVertex (int i)
 		{
-            g.Verteces[i].IsMarked = true;
+            g.Vertices[i].IsMarked = true;
 		}
 
 		
@@ -75,7 +75,7 @@ namespace CQCS.QuantumWalks.Graph
 
         private void Query ()
         {
-            foreach (Vertex v in g.Verteces)
+            foreach (Vertex v in g.Vertices)
                 if (v.IsMarked)
                 {
                     foreach (Edge e in v.Edges)
@@ -92,7 +92,7 @@ namespace CQCS.QuantumWalks.Graph
 		/// </summary>
 		private void CoinFlip ()
 		{
-            foreach (Vertex v in g.Verteces)
+            foreach (Vertex v in g.Vertices)
             { 
                 // Calculate an average
                 double avg = 0;
@@ -117,7 +117,7 @@ namespace CQCS.QuantumWalks.Graph
 		/// </summary>
         private void Shift()
         {
-            foreach (Vertex v in g.Verteces)
+            foreach (Vertex v in g.Vertices)
                 foreach (Edge e in v.Edges)
                     if (v.Index < e.GetOtherVertex(v).Index)    // Do it only once
                     {
@@ -139,7 +139,7 @@ namespace CQCS.QuantumWalks.Graph
 		{
 			double scalarProduct = 0;
 
-            foreach (Vertex v in g.Verteces)
+            foreach (Vertex v in g.Vertices)
                 foreach (Edge e in v.Edges)
 			    {
 				    scalarProduct += e.GetAmplitude(v);
@@ -158,7 +158,7 @@ namespace CQCS.QuantumWalks.Graph
 		{
             double probability = 0;
 
-            Vertex v = g.Verteces[i];
+            Vertex v = g.Vertices[i];
 
             foreach (Edge e in v.Edges)
             {
@@ -176,7 +176,7 @@ namespace CQCS.QuantumWalks.Graph
         {
             double probability = 0;
 
-            foreach (Vertex v in g.Verteces)
+            foreach (Vertex v in g.Vertices)
             {
                 if (v.IsMarked)
                 {

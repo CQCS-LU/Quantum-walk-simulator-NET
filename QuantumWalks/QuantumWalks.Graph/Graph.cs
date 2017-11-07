@@ -40,6 +40,8 @@ namespace CQCS.QuantumWalks.Graph
         public int Index;
         public List<Edge> Edges;
         public bool IsMarked;
+
+        public int Degree { get { return Edges.Count; } }
     }
 
     /// <summary>
@@ -47,31 +49,37 @@ namespace CQCS.QuantumWalks.Graph
     /// </summary>
     public class Graph 
     {
-        public readonly List<Vertex> Verteces;
+        public readonly List<Vertex> Vertices;
         public readonly List<Edge> Edges;
 
         public Graph(int numberOfVertices)
         {
-            Verteces = new List<Vertex>();
+            Vertices = new List<Vertex>();
             Edges = new List<Edge>();
 
             for (int i = 0; i < numberOfVertices; i++)
-                Verteces.Add(new Vertex { Index = i, Edges = new List<Edge>() });
+                Vertices.Add(new Vertex { Index = i, Edges = new List<Edge>() });
         }
 
         public bool HasEdge(int i, int j)
         {
-            return Verteces[i].Edges.Any(e => e.V2.Index == j);
+            if ((i >= Vertices.Count) || (j >= Vertices.Count))
+                return false;
+
+            return Vertices[i].Edges.Any(e => e.V2.Index == j);
         }
 
         public void AddEdge(int i, int j)
         {
+            if ((i >= Vertices.Count) || (j >= Vertices.Count))
+                return;
+
             if (HasEdge(i, j))
                 return;
 
-            var e = new Edge { V1 = Verteces[j], V2 = Verteces[i] };
-            Verteces[i].Edges.Add(e);
-            Verteces[j].Edges.Add(e);
+            var e = new Edge { V1 = Vertices[j], V2 = Vertices[i] };
+            Vertices[i].Edges.Add(e);
+            Vertices[j].Edges.Add(e);
             Edges.Add(e);
         }
     }
