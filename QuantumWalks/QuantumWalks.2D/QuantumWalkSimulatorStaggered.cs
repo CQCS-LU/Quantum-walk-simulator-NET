@@ -41,7 +41,6 @@ namespace CQCS.QuantumWalks.Grid2D
 
             // Set initial state
 			int stateCount = Height*Width;
-
             double initialAmplitude = 1.0 / Math.Sqrt (stateCount);
 
             for (int y = 0; y < Height; y++)	
@@ -187,17 +186,18 @@ namespace CQCS.QuantumWalks.Grid2D
 		/// </summary>
 		public double GetScalarProduct ()
 		{
-			double scalarProduct = 0;
+			double amplitudeSum = 0;
 
 			for (int y = 0; y < Height; y++)
 			for (int x = 0; x < Width; x++)
 			{
-				scalarProduct += state [x, y];
+				amplitudeSum += state [x, y];
 			}
 
 			int stateCount = Height*Width;
+            double initialAmplitude = 1.0 / Math.Sqrt (stateCount);
 
-			return scalarProduct / Math.Sqrt (stateCount);
+			return amplitudeSum * initialAmplitude;
 		}
 
 

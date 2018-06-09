@@ -22,12 +22,13 @@ namespace CQCS.QuantumWalks.Grid2D
     /// <summary>
     /// Represents a two dimensional walk direction.
     /// </summary>
-    public class Direction
+    public enum Direction
     {
-        public const int Left  = 0;
-		public const int Right = 1;
-		public const int Up    = 2;
-		public const int Down  = 3;
+        Left  = 0,
+		Right = 1,
+		Up    = 2,
+		Down  = 3,
+		Self  = 4
     }
 
 
@@ -37,10 +38,10 @@ namespace CQCS.QuantumWalks.Grid2D
 	public class QuantumWalkSimulatorCoined : IQuantumWalkSimulator
     {
 		// Walk directions shortcuts
-		private const int Left  = Direction.Left;
-		private const int Right = Direction.Right;
-		private const int Up    = Direction.Up;
-		private const int Down  = Direction.Down;
+		private const int Left  = (int) Direction.Left;
+		private const int Right = (int) Direction.Right;
+		private const int Up    = (int) Direction.Up;
+		private const int Down  = (int) Direction.Down;
 
         public readonly int Height;
         public readonly int Width;
@@ -74,7 +75,6 @@ namespace CQCS.QuantumWalks.Grid2D
 
             // Set initial state
 			int stateCount = 4*Height*Width;
-
             double initialAmplitude = 1.0 / Math.Sqrt (stateCount);
 
             for (int y = 0; y < Height; y++)	
@@ -162,10 +162,10 @@ namespace CQCS.QuantumWalks.Grid2D
             foreach (var p in markedVertexDict.Values)
             {
                 // Change sign of amplitudes
-                state[p.X, p.Y, Left] = -state[p.X, p.Y, Left];
+                state[p.X, p.Y, Left]  = -state[p.X, p.Y, Left];
                 state[p.X, p.Y, Right] = -state[p.X, p.Y, Right];
-                state[p.X, p.Y, Up] = -state[p.X, p.Y, Up];
-                state[p.X, p.Y, Down] = -state[p.X, p.Y, Down];
+                state[p.X, p.Y, Up]    = -state[p.X, p.Y, Up];
+                state[p.X, p.Y, Down]  = -state[p.X, p.Y, Down];
             }
         }
 
@@ -185,29 +185,33 @@ namespace CQCS.QuantumWalks.Grid2D
                 {
                     if (IsVertexMarked(x, y))
                     {
-                        // Do nothing
+                        IdentityCoin(x, y);
                     }
                     else
                     {
-                        GroverCoin(y, x);
+                        GroverCoin(x, y);
                     }
                 }
                 else if (Coin == Coin.Grover)
                 {
-                    GroverCoin(y, x);
+                    GroverCoin(x, y);
                 }
             }
         }
 
-        private void GroverCoin(int y, int x)
+        private void IdentityCoin(int x, int y)
+        {
+        }
+
+        private void GroverCoin(int x, int y)
         {
             double halfSum = 0.5 * (state[x, y, Left] + state[x, y, Right] +
-                            state[x, y, Up] + state[x, y, Down]);
+                                    state[x, y, Up] + state[x, y, Down]);
 
-            state[x, y, Left] = halfSum - state[x, y, Left];
+            state[x, y, Left]  = halfSum - state[x, y, Left];
             state[x, y, Right] = halfSum - state[x, y, Right];
-            state[x, y, Up] = halfSum - state[x, y, Up];
-            state[x, y, Down] = halfSum - state[x, y, Down];
+            state[x, y, Up]    = halfSum - state[x, y, Up];
+            state[x, y, Down]  = halfSum - state[x, y, Down];
         }
 
         #endregion
@@ -246,17 +250,18 @@ namespace CQCS.QuantumWalks.Grid2D
 		/// </summary>
 		public double GetScalarProduct ()
 		{
-			double scalarProduct = 0;
+			double amplitudeSum = 0;
 
 			for (int y = 0; y < Height; y++)
 			for (int x = 0; x < Width; x++)
 			{
-				scalarProduct += (state [x, y, Left] + state [x, y, Right] + state [x, y, Up] + state [x, y, Down]);
+				amplitudeSum += (state[x, y, Left] + state[x, y, Right] + state[x, y, Up] + state[x, y, Down]);
 			}
 
 			int stateCount = 4*Height*Width;
+            double initialAmplitude = 1.0 / Math.Sqrt (stateCount);
 
-			return scalarProduct / Math.Sqrt (stateCount);
+			return amplitudeSum * initialAmplitude;
 		}
 
 
