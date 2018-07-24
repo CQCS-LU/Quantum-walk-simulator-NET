@@ -16,7 +16,7 @@ namespace CQCS.QuantumWalks.Grid2D
 		private const int Right = (int) Direction.Right;
 		private const int Up    = (int) Direction.Up;
 		private const int Down  = (int) Direction.Down;
-		private const int Self  = (int) Direction.None;
+		private const int Self  = (int) Direction.Self;
 
         public readonly int Height;
         public readonly int Width;
@@ -52,7 +52,7 @@ namespace CQCS.QuantumWalks.Grid2D
             Coin = coin;
 
             // Set initial state
-			var denominator = (4 + SelfLoopWeight)*Height*Width;
+			var denominator = (4 + SelfLoopWeight)*(Height*Width);
             double initialAmplitude = 1.0 / Math.Sqrt (denominator);
 
             for (int y = 0; y < Height; y++)	
@@ -80,11 +80,6 @@ namespace CQCS.QuantumWalks.Grid2D
                 markedVertexDict.Add(v, v);
         }
 
-		public void MarkVertex(int x, int y)
-		{
-			MarkVertex(new Vertex(x, y));
-		}
-
         public void UnMarkVertex(Vertex v)
         {
             if ((v.X < 0) || (Width <= v.X)) throw new ArgumentOutOfRangeException ("x");
@@ -94,6 +89,16 @@ namespace CQCS.QuantumWalks.Grid2D
                 markedVertexDict.Remove(v);
         }
 
+        public bool IsVertexMarked(Vertex v)
+        {
+            return markedVertexDict.ContainsKey(v);
+        }
+		
+        public void MarkVertex(int x, int y)
+		{
+			MarkVertex(new Vertex(x, y));
+		}
+
         public void UnMarkVertex(int x, int y)
 		{
 			UnMarkVertex(new Vertex(x, y)); 
@@ -101,15 +106,9 @@ namespace CQCS.QuantumWalks.Grid2D
 
         public bool IsVertexMarked(int x, int y)
         {
-            var v = new Vertex(x, y);
-            return IsVertexMarked(v);
+            return IsVertexMarked(new Vertex(x, y));
         }
 
-        public bool IsVertexMarked(Vertex v)
-        {
-            return markedVertexDict.ContainsKey(v);
-        }
-		
 		////////////////////////////////////////////////////////////////////////
 
 		/// <summary>
@@ -185,6 +184,9 @@ namespace CQCS.QuantumWalks.Grid2D
 
         private void GroverCoin(int x, int y)
         {
+            // C = 2|s_c><s_c| - I
+            // |s_c> = 1/sqrt(4+l) (|left> + |right> + |up> + |down> + sqrt(l)|self>)
+
             double sum = (state[x, y, Left] + state[x, y, Right] + state[x, y, Up] + state[x, y, Down] + Math.Sqrt(SelfLoopWeight)*state[x, y, Self]);
 
             double scaledSum = 2 * sum / (4 + SelfLoopWeight);
@@ -193,7 +195,7 @@ namespace CQCS.QuantumWalks.Grid2D
             state[x, y, Right] = scaledSum - state[x, y, Right];
             state[x, y, Up]    = scaledSum - state[x, y, Up];
             state[x, y, Down]  = scaledSum - state[x, y, Down];
-            state[x, y, Self]  = Math.Sqrt(SelfLoopWeight)*scaledSum - state[x, y, Self];
+            state[x, y, Self]  = scaledSum*Math.Sqrt(SelfLoopWeight) - state[x, y, Self];
         }
 
         #endregion

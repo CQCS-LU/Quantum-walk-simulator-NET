@@ -14,5 +14,10 @@ namespace CQCS.QuantumWalks.Grid2D
             X = x;
             Y = y;
         }
+
+        public override string ToString() 
+        {
+            return $"({X}, {Y})";
+        }
     }
 }
