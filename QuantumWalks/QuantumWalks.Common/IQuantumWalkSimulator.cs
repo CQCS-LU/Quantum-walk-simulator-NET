@@ -27,5 +27,12 @@ namespace CQCS.QuantumWalks.Common
         /// Returns a total probability of all marked vertices.
         /// </summary>
         double GetMarkedVertexProbability();
+
+#if DEBUG
+        /// <summary>
+        /// Returns a total probability of all vertices.
+        /// </summary>
+        double GetTotalProbability();
+#endif
     }
 }

@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\QuantumWalks.Common\QuantumWalks.Common.csproj" />
     <ProjectReference Include="..\QuantumWalks.Graph\QuantumWalks.Graph.csproj" />
+    <ProjectReference Include="..\QuantumWalks.2D\QuantumWalks.Grid2D.csproj" />
   </ItemGroup>
 
 </Project>

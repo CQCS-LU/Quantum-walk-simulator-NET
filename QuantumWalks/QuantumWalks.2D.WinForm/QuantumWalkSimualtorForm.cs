@@ -141,13 +141,13 @@ namespace CQCS.QuantumWalks.Grid2D.WinForm
 
 		////////////////////////////////////////////////////////////////////////
         
-		readonly QuantumWalkSimulatorCoined qws;
+		readonly QuantumWalkSimulatorCoinedRectangle qws;
 
         public QuantumWalkSimulatorForm()
 		{
 			InitializeComponent();
 
-            qws = new QuantumWalkSimulatorCoined (quantumWalkGrid.HeightInPoints, quantumWalkGrid.WidthInPoints);
+            qws = new QuantumWalkSimulatorCoinedRectangle (quantumWalkGrid.HeightInPoints, quantumWalkGrid.WidthInPoints);
 
             MarkVertices();
         }

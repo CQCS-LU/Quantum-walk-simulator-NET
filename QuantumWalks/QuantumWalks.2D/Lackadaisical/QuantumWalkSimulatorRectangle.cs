@@ -2,21 +2,20 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-using CQCS.QuantumWalks.Common;
-
-namespace CQCS.QuantumWalks.Grid2D
+namespace CQCS.QuantumWalks.Grid2D.Lackadaisical
 {
     /// <summary>
-    /// Implements lackadaisical quantum walk on two-dimensional grid (https://arxiv.org/pdf/1706.06939).
+    /// Implements lackadaisical quantum walk on two-dimensional rectangle grid (https://arxiv.org/pdf/1706.06939).
     /// </summary>
-	public class QuantumWalkSimulatorLackadaisical : IQuantumWalkSimulator
+	public class QuantumWalkSimulatorRectangle : IQuantumWalkSimulator2D
     {
-		// Walk directions shortcuts
-		private const int Left  = (int) Direction.Left;
-		private const int Right = (int) Direction.Right;
-		private const int Up    = (int) Direction.Up;
-		private const int Down  = (int) Direction.Down;
-		private const int Self  = (int) Direction.Self;
+        private const int Left = 0;
+		private const int Right = 1;
+		private const int Up = 2;
+		private const int Down = 3;
+		private const int Self = 4;
+
+        private const int DirectionCount = 4;
 
         public readonly int Height;
         public readonly int Width;
@@ -27,32 +26,22 @@ namespace CQCS.QuantumWalks.Grid2D
 
         public readonly Coin Coin;
 
-		private double[,,] state;
-
-        private readonly Dictionary<Vertex, Vertex> markedVertexDict = new Dictionary<Vertex, Vertex>();
-
-        /// <summary>
-        /// Gets a list of marked vertices.
-        /// </summary>
-        public List<Vertex> MarkedVertices
-        {
-            get { return markedVertexDict.Values.ToList(); }
-        }
+		private readonly double[,,] state;
 
 		////////////////////////////////////////////////////////////////////////
 
-		public QuantumWalkSimulatorLackadaisical (int height, int width, Coin coin = Coin.Grover, double selfLoopWeight = 0)
+		public QuantumWalkSimulatorRectangle (int height, int width, Coin coin = Coin.Grover, double selfLoopWeight = 0)
 		{
             Height = height;
             Width = width;
             SelfLoopWeight = selfLoopWeight;
 	
-			state = new double [Width, Height, 5];
+			state = new double [Width, Height, DirectionCount + 1];
 
             Coin = coin;
 
             // Set initial state
-			var denominator = (4 + SelfLoopWeight)*(Height*Width);
+			var denominator = (DirectionCount + SelfLoopWeight)*(Height*Width);
             double initialAmplitude = 1.0 / Math.Sqrt (denominator);
 
             for (int y = 0; y < Height; y++)	
@@ -68,8 +57,17 @@ namespace CQCS.QuantumWalks.Grid2D
 			T = 0;
 		}
 
+        ////////////////////////////////////////////////////////////////////////
 
-		////////////////////////////////////////////////////////////////////////
+        private readonly Dictionary<Vertex, Vertex> markedVertexDict = new Dictionary<Vertex, Vertex>();
+
+        /// <summary>
+        /// Gets a list of marked vertices.
+        /// </summary>
+        public List<Vertex> MarkedVertices
+        {
+            get { return markedVertexDict.Values.ToList(); }
+        }
 
         public void MarkVertex(Vertex v)
         {
@@ -80,6 +78,11 @@ namespace CQCS.QuantumWalks.Grid2D
                 markedVertexDict.Add(v, v);
         }
 
+        public void MarkVertex(int x, int y)
+		{
+			MarkVertex(new Vertex(x, y));
+		}
+
         public void UnMarkVertex(Vertex v)
         {
             if ((v.X < 0) || (Width <= v.X)) throw new ArgumentOutOfRangeException ("x");
@@ -89,21 +92,16 @@ namespace CQCS.QuantumWalks.Grid2D
                 markedVertexDict.Remove(v);
         }
 
-        public bool IsVertexMarked(Vertex v)
-        {
-            return markedVertexDict.ContainsKey(v);
-        }
-		
-        public void MarkVertex(int x, int y)
-		{
-			MarkVertex(new Vertex(x, y));
-		}
-
         public void UnMarkVertex(int x, int y)
 		{
 			UnMarkVertex(new Vertex(x, y)); 
 		}
 
+        public bool IsVertexMarked(Vertex v)
+        {
+            return markedVertexDict.ContainsKey(v);
+        }
+		
         public bool IsVertexMarked(int x, int y)
         {
             return IsVertexMarked(new Vertex(x, y));
@@ -187,9 +185,11 @@ namespace CQCS.QuantumWalks.Grid2D
             // C = 2|s_c><s_c| - I
             // |s_c> = 1/sqrt(4+l) (|left> + |right> + |up> + |down> + sqrt(l)|self>)
 
-            double sum = (state[x, y, Left] + state[x, y, Right] + state[x, y, Up] + state[x, y, Down] + Math.Sqrt(SelfLoopWeight)*state[x, y, Self]);
+            double sum = state[x, y, Left] + state[x, y, Right] + 
+                         state[x, y, Up] + state[x, y, Down] + 
+                         Math.Sqrt(SelfLoopWeight) * state[x, y, Self];
 
-            double scaledSum = 2 * sum / (4 + SelfLoopWeight);
+            double scaledSum = 2 * sum / (DirectionCount + SelfLoopWeight);
 
             state[x, y, Left]  = scaledSum - state[x, y, Left];
             state[x, y, Right] = scaledSum - state[x, y, Right];
@@ -232,37 +232,30 @@ namespace CQCS.QuantumWalks.Grid2D
 		/// <summary>
 		/// Returns a scalar product of the current and the initial state.
 		/// </summary>
-		public double GetScalarProduct ()
+		public double GetScalarProduct()
 		{
 			double amplitudeSum = 0;
 
 			for (int y = 0; y < Height; y++)
 			for (int x = 0; x < Width; x++)
 			{
-				amplitudeSum += (state [x, y, Left] + state [x, y, Right] + state [x, y, Up] + state [x, y, Down] + Math.Sqrt(SelfLoopWeight)*state[x, y, Self]);
+				amplitudeSum += state [x, y, Left] + state [x, y, Right] + 
+                                state [x, y, Up] + state [x, y, Down] + 
+                                Math.Sqrt(SelfLoopWeight)*state[x, y, Self];
 			}
 
-			var denominator = (4 + SelfLoopWeight)*Height*Width;
+			var denominator = (DirectionCount + SelfLoopWeight)*(Height*Width);
             var initialAmplitude = 1.0 / Math.Sqrt(denominator);
 
 			return amplitudeSum * initialAmplitude;
 		}
 
 
-		/// <summary>
-		/// Returns the amplitude of the vertex.
-		/// </summary>
-		public double GetVertexAmplitude (int x, int y, int direction)
-		{
-            return state [x, y, direction]; 
-        }
-
-
         /// <summary>
 		/// Returns a probability to find the vertex as a result of the measurement
         /// for the specific direction.
 		/// </summary>
-		public double GetVertexProbability(int x, int y, int direction)
+		private double GetVertexProbability(int x, int y, int direction)
         {
             return Math.Pow(state[x, y, direction], 2);
         }
@@ -271,7 +264,7 @@ namespace CQCS.QuantumWalks.Grid2D
         /// <summary>
         /// Returns a probability to get the vertex as a result of the measurement.
         /// </summary>
-        public double GetVertexProbability (int x, int y)
+        public double GetVertexProbability(int x, int y)
 		{
             return GetVertexProbability(x, y, Left) +
                    GetVertexProbability(x, y, Right) +
@@ -302,10 +295,10 @@ namespace CQCS.QuantumWalks.Grid2D
             double probability = 0;
 
             for (int y = 0; y < Height; y++)
-                for (int x = 0; x < Width; x++)
-                {
-                    probability += GetVertexProbability(x, y);
-                }
+            for (int x = 0; x < Width; x++)
+            {
+                probability += GetVertexProbability(x, y);
+            }
 
             return probability;
         }

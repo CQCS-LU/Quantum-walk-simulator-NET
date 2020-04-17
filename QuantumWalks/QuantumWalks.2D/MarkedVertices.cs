@@ -12,21 +12,21 @@ namespace CQCS.QuantumWalks.Grid2D
         /// </summary>
         public static Vertex[] Perimiter(int k, int x_start = 0, int y_start = 0)
         {
-            var markedPoints = new List<Vertex>();
+            var markedVertices = new List<Vertex>();
             
             for (int x = x_start; x < x_start + k - 1; x++)
-                markedPoints.Add(new Vertex(x, y_start));
+                markedVertices.Add(new Vertex(x, y_start));
 
             for (int y = y_start; y < y_start + k - 1; y++)
-                markedPoints.Add(new Vertex(x_start + k - 1, y));
+                markedVertices.Add(new Vertex(x_start + k - 1, y));
 
             for (int x = x_start + k - 1; x > x_start; x--)
-                markedPoints.Add(new Vertex(x, y_start + k - 1));
+                markedVertices.Add(new Vertex(x, y_start + k - 1));
 
             for (int y = y_start + k - 1; y > y_start; y--)
-                markedPoints.Add(new Vertex(x_start, y));
+                markedVertices.Add(new Vertex(x_start, y));
 
-            return markedPoints.ToArray();
+            return markedVertices.ToArray();
         }
 
         /// <summary>
@@ -37,18 +37,18 @@ namespace CQCS.QuantumWalks.Grid2D
             if (k % 2 != 0)
                 throw new System.ApplicationException("k must be even");
 
-            var markedPoints = new List<Vertex>();
+            var markedVertices = new List<Vertex>();
             var skipNext = false;
 
             foreach (var vertex in Perimiter(k, x_start, y_start))
             {
                 if (!skipNext)
-                    markedPoints.Add(vertex);
+                    markedVertices.Add(vertex);
 
                 skipNext = !skipNext;
             }
 
-            return markedPoints.ToArray();
+            return markedVertices.ToArray();
         }
 
         /// <summary>
@@ -65,17 +65,36 @@ namespace CQCS.QuantumWalks.Grid2D
         /// </summary>
         public static Vertex[] Rect(int x_k, int y_k, int x_step = 1, int y_step = 1, int x_start = 0, int y_start = 0)
         {
-            var markedPoints = new List<Vertex>();
+            var markedVertices = new List<Vertex>();
 
             for (int x_i = 0; x_i < x_k; x_i++)
             for (int y_i = 0; y_i < y_k; y_i++)
             {
                 int x = x_start + x_i*x_step;
                 int y = y_start + y_i*y_step;
-                markedPoints.Add(new Vertex(x, y));
+                markedVertices.Add(new Vertex(x, y));
             }
 
-            return markedPoints.ToArray();
+            return markedVertices.ToArray();
+        }
+
+        /// <summary>
+        /// Returns requested number of marked vertices chosen at random.
+        /// </summary>
+        public static Vertex[] Random(int width, int height, int count = 1)
+        {
+            var markedVertices = new List<Vertex>();
+
+            var rand = new System.Random();
+
+            for (int i = 0; i < count; i++)
+            {
+                int x = rand.Next(width);
+                int y = rand.Next(height);
+                markedVertices.Add(new Vertex(x, y));
+            }
+
+            return markedVertices.ToArray();
         }
     }
 }

@@ -186,5 +186,20 @@ namespace CQCS.QuantumWalks.Graph
 
             return probability;
         }
+
+        /// <summary>
+        /// Returns the total probability (for testing purposes).
+        /// </summary>
+        public double GetTotalProbability()
+        {
+            double probability = 0;
+
+            foreach (Vertex v in g.Vertices)
+            {
+                probability += GetVertexProbability(v.Index);
+            }
+
+            return probability;
+        }
     }
 }
