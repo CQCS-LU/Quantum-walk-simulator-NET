@@ -58,7 +58,7 @@ namespace CQCS.QuantumWalks.Grid2D.Lackadaisical
 
 		////////////////////////////////////////////////////////////////////////
 
-		public QuantumWalkSimulatorTriangle(int height, int width, Coin coin = Coin.AKR, double selfLoopWeight = 0)
+		public QuantumWalkSimulatorTriangle(int height, int width, Coin coin = Coin.Grover, double selfLoopWeight = 0)
         {
             Height = height;
             Width = width;
@@ -81,7 +81,7 @@ namespace CQCS.QuantumWalks.Grid2D.Lackadaisical
 				state [x, y, UpRight] = initialAmplitude;
 				state [x, y, DownLeft] = initialAmplitude;
 				state [x, y, DownRight] = initialAmplitude;
-                state[x, y, Self] = initialAmplitude * Math.Sqrt(SelfLoopWeight);
+                state [x, y, Self] = initialAmplitude * Math.Sqrt(SelfLoopWeight);
             }
 
             T = 0;

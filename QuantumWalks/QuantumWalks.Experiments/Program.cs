@@ -5,7 +5,7 @@ namespace CQCS.QuantumWalks.Experiments
     {
         static void Main()
         {
-            Graph.BarabasiAlbertRandomGraphs.Run();
+            Grid2D.DataGenerators.Grid2DLackadaisical.Run();
         }
     }
 }

@@ -72,7 +72,7 @@ namespace CQCS.QuantumWalks.Grid2D.Lackadaisical
 
         ////////////////////////////////////////////////////////////////////////
 
-        public QuantumWalkSimulatorHoneycomb(int height, int width, Coin coin = Coin.AKR, double selfLoopWeight = 0)
+        public QuantumWalkSimulatorHoneycomb(int height, int width, Coin coin = Coin.Grover, double selfLoopWeight = 0)
         {
             Height = height;
             Width = width;
