@@ -6,7 +6,7 @@ namespace CQCS.QuantumWalks.Grid2D.DataGenerators
 {
     /// <summary>
     /// Numerical experiments on lackadaisical QW on 2D - rectangle, triangle and honeycomb - grids.
-    /// Base for the arxiv.org submission 3292030.
+    /// Base for the arxiv.org paper http://arxiv.org/abs/2007.13564
     /// </summary>
 	public class Grid2DLackadaisical
 	{
