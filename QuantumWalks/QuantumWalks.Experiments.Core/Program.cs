@@ -6,7 +6,8 @@ namespace CQCS.QuantumWalks.Experiments
     {
         static void Main()
         {
-            Graph.BarabasiAlbertRandomGraphs.Run();
+            //Grid2D.DataGenerators.StepCountAndProbability_2D_Triangle.Run();
+            Grid2D.DataGenerators.StepCountAndProbability_2D_Homeycomb.Run();
         }
     }
 }
