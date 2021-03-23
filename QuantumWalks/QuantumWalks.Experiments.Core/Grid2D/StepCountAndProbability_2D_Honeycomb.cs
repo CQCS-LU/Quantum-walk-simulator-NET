@@ -9,7 +9,7 @@ namespace CQCS.QuantumWalks.Experiments.Grid2D.DataGenerators
     /// <summary>
     /// Numerical experiments on honeycomb 2D grid with multiple marked vertices.
     /// </summary>
-	public static class StepCountAndProbability_2D_Homeycomb
+	public static class StepCountAndProbability_2D_Honeycomb
     {
         public static void Run()
         {

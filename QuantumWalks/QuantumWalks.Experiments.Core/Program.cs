@@ -6,8 +6,8 @@ namespace CQCS.QuantumWalks.Experiments
     {
         static void Main()
         {
-            //Grid2D.DataGenerators.StepCountAndProbability_2D_Triangle.Run();
-            Grid2D.DataGenerators.StepCountAndProbability_2D_Homeycomb.Run();
+            Grid2D.DataGenerators.StepCountAndProbability_2D_Triangle.Run();
+            //Grid2D.DataGenerators.StepCountAndProbability_2D_Honeycomb.Run();
         }
     }
 }
