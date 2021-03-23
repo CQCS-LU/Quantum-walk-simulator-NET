@@ -4,7 +4,7 @@ namespace CQCS.QuantumWalks.Grid2D
     /// <summary>
     /// Provides helper methods to calculate coordinates on the torus.
     /// </summary>
-    internal class Torus
+    public class Torus
     {
         /// <summary>
 		/// Calculates X coordinate in torus of given width.

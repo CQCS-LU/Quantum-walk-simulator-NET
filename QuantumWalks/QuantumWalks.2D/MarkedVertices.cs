@@ -79,6 +79,15 @@ namespace CQCS.QuantumWalks.Grid2D
         }
 
         /// <summary>
+        /// Returns m x m marked vertices equally distributed over a n x n grid.
+        /// </summary>
+        public static Vertex[] Distributed(int n, int m)
+        {
+            int step = n/m;
+            return Rect(m, m, step, step);
+        }
+
+        /// <summary>
         /// Returns requested number of marked vertices chosen at random.
         /// </summary>
         public static Vertex[] Random(int width, int height, int count = 1)
