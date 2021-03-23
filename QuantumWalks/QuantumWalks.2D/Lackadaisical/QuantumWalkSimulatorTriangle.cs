@@ -7,7 +7,7 @@ namespace CQCS.QuantumWalks.Grid2D.Lackadaisical
     /// <summary>
     /// Implements quantum walk on triangular two-dimensional grid.
     /// </summary>
-	public class QuantumWalkSimulatorTriangle : IQuantumWalkSimulator2D
+	public class QuantumWalkSimulatorTriangle : ILackadaisicalQuantumWalkSimulator2D
     { 
         // We use equivalence of triangular 2D grid and rectangular 2D grid
         // with six edges going from each vertex, i.e.
@@ -50,7 +50,7 @@ namespace CQCS.QuantumWalks.Grid2D.Lackadaisical
 
         public int N {  get { return Width * Height; } }
 
-        public readonly double SelfLoopWeight;
+        public double SelfLoopWeight { get; set; }
 
         public readonly Coin Coin;
 

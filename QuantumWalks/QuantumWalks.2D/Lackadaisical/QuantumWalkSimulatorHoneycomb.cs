@@ -7,7 +7,7 @@ namespace CQCS.QuantumWalks.Grid2D.Lackadaisical
     /// <summary>
     /// Implements quantum walk on honeycomb two-dimensional grid.
     /// </summary>
-	public class QuantumWalkSimulatorHoneycomb : IQuantumWalkSimulator2D
+	public class QuantumWalkSimulatorHoneycomb : ILackadaisicalQuantumWalkSimulator2D
     {
         // We use equivalence of honeycomb 2D grid and rectangular 2D grid
         // with three edges going from each vertex, i.e.
@@ -54,7 +54,7 @@ namespace CQCS.QuantumWalks.Grid2D.Lackadaisical
 
         public int N {  get { return Width * Height; } }
 
-        public readonly double SelfLoopWeight;
+        public double SelfLoopWeight { get; set; }
 
         public readonly Coin Coin;
 

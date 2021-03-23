@@ -7,7 +7,7 @@ namespace CQCS.QuantumWalks.Grid2D.Lackadaisical
     /// <summary>
     /// Implements lackadaisical quantum walk on two-dimensional rectangle grid (https://arxiv.org/pdf/1706.06939).
     /// </summary>
-	public class QuantumWalkSimulatorRectangle : IQuantumWalkSimulator2D
+	public class QuantumWalkSimulatorRectangle : ILackadaisicalQuantumWalkSimulator2D
     {
         private const int Left = 0;
 		private const int Right = 1;
@@ -22,7 +22,7 @@ namespace CQCS.QuantumWalks.Grid2D.Lackadaisical
 
         public int N {  get { return Width * Height; } }
 
-        public readonly double SelfLoopWeight;
+        public double SelfLoopWeight { get; set; }
 
         public readonly Coin Coin;
 
